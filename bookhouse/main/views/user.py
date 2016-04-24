@@ -9,9 +9,15 @@ from bookhouse.main.misc.errors import ViewProcessJump
 from bookhouse.main.views import API_FAIL_CODES
 
 
+@app.route('/', methods=['GET'])
+@app.route('/account/sign-in/', methods=['GET'])
+def sign_in_page():
+    return render_template('sign_in.html', title='sign in')
+
+
 @app.route('/account/sign-up/', methods=['GET'])
 def sign_up_page():
-    return render_template('sign_up.html')
+    return render_template('sign_up.html', title='sign up')
 
 
 API_FAIL_CODES['SIGN_UP'] = {
@@ -91,10 +97,7 @@ def sign_up_api():
                 assert False
 
 
-@app.route('/', methods=['GET'])
-@app.route('/account/sign-in/', methods=['GET'])
-def sign_in_page():
-    return render_template('sign_in.html')
+
 
 
 @app.route('/api/account/sign-in/', methods=['POST'])

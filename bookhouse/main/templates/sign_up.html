@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content   %}
+<form ng-app="signUp" ng-controller="signUpCtrl" >
+  <div>
+    <label>用户名：</label>
+    <input type="text" ng-model="name" />
+  </div>
+  <div>
+    <label>密码：</label>
+    <input type="password" ng-model="password">
+  </div>
+  <div>
+    <label>性别：</label>
+    <span ng-repeat="option in GENDER_OPTIONS" ng-cloak><input name="gender" type="radio" ng-value="option['magic']" ng-model="gender" /><span  ng-bind="option['name']"></span></span>
+  </div>
+
+
+  <div>
+    <button type="submit" ng-click="signup_submit()">注册</button>
+  </div>
+</form>
+</form>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='src/assets/js/sign_up.js') }}">
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{title}}</title>
+  <style>
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <p>Hello,every day!</p>
+  <hr>
+  {% block content %}
+  {% endblock %}
+  <br>
+  <hr>
+  <p> ©copyright place</p>
+  {% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='src/assets/lib/jquery/jquery-1.12.0.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='src/assets/lib/angular/angular.js') }}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='src/assets/lib/angular-cookie/angular-cookie.js') }}" ></script>
+  {% endblock %}
+</body>
+
+</html>

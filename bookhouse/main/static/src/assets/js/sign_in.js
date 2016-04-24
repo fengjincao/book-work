@@ -18,11 +18,10 @@
           $scope.signup_submit=function(){
             $http({
                     method: 'POST',
-                    url: '/api/account/sign-up/',
+                    url: '/api/account/sign-in/',
                     data: {
                         'name': $scope.name,
-                        'password': $scope.password,
-                        'gender' : $scope.gender
+                        'password': $scope.password
                     }
                   }).success(function (data, status, headers, config) {
                     var content = data['data'];
