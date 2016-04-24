@@ -91,6 +91,7 @@ def sign_up_api():
                 assert False
 
 
+@app.route('/', methods=['GET'])
 @app.route('/account/sign-in/', methods=['GET'])
 def sign_in_page():
     return render_template('sign_in.html')
