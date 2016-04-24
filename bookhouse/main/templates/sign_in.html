@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content   %}
-  <form name="entersys" ng-app="login" ng-controller="loginCtrl" novalidate >
+  <form name="entersys" ng-app="signIn" ng-controller="signInCtrl" novalidate >
     <div>
       <label>用户名：</label>
-      <input type="text" ng-model="username" name="user_name" required />
+      <input type="text" ng-model="name" name="user_name" required />
       <span ng-show="entersys.user_name.$error.required" ng-cloak>用户名不能为空</span>
     </div>
     <div>
@@ -12,16 +12,15 @@
       <span ng-show="entersys.pwd.$error.required" ng-cloak>用户名不能为空</span>
     </div>
     <div>
-      <button type="button" ng-click="login()" ng-disabled="entersys.$invalid">登陆</button>
-      <button type="button" ng-click="logup()">注册</button>
+      <button type="button" ng-click="signIn_submit()" ng-disabled="entersys.$invalid">登陆</button>
+      <button type="button" ng-click="signUp()">注册</button>
     </div>
   </form>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
-<script type="text/javascript">
-
+<script type="text/javascript" src="{{ url_for('static', filename='src/assets/js/sign_in.js') }}">
 </script>
 
 {% endblock %}

@@ -97,10 +97,56 @@ def sign_up_api():
                 assert False
 
 
-
-
-
 @app.route('/api/account/sign-in/', methods=['POST'])
 def sign_in_api():
     if request.method == 'POST':
-        pass
+        try:
+            request_data = request.json
+            if request_data is None:
+                raise ViewProcessJump(code='ILLEGAL_INPUT')
+            validator = Validator({
+                'name': {
+                    'type': 'string',
+                    'required': 'True',
+                    'maxlength': 16
+                },
+                'password': {
+                    'type': 'string',
+                    'required': 'True',
+                    'maxlength': 32
+                },
+            })
+            if not validator.validate(request_data):
+                raise ViewProcessJump(code='ILLEGAL_USER_INPUT')
+            name = validator.document.get('name')
+            user = User.query.filter(db.text('name = :name')).params(name=name).first()
+            if not user:
+                raise ViewProcessJump(code='USER_NOT_EXIST')
+
+            resp_json = {
+                'status': 'success',
+                'data': {
+                    'token': str(user.id),
+                    'name': user.name
+                },
+            }
+            return jsonify(**resp_json)
+
+        except ViewProcessJump as e:
+            if e.code in {
+                'ILLEGAL_INPUT',
+                'ILLEGAL_USER_INPUT',
+            }:
+                abort(400)
+            elif e.code in {
+                'USER_NOT_EXIST',
+            }:
+                resp_json = {
+                    'status': 'fail',
+                    'data': {
+                        'code': 'USER_NOT_EXIST',
+                    },
+                }
+                return jsonify(**resp_json)
+            else:
+                assert False
