@@ -6,6 +6,7 @@
         $scope.password = "";
         $scope.signIn_submit=function(){
         $http({
+
                 method: 'POST',
                 url: '/api/account/sign-in/',
                 data: {
