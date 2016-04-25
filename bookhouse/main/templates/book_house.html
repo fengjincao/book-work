@@ -13,6 +13,7 @@
         <td>价格</td>
         <td>简介</td>
         <td>拥有者</td>
+        <td>操作</td>
       </tr>
       <tr ng-repeat="book in books">
         <td ng-bind="book['book_id']"></td>
@@ -20,6 +21,10 @@
         <td ng-bind="book['book_price']"></td>
         <td ng-bind="book['book_intro']"></td>
         <td ng-bind="book['book_owner']"></td>
+        <td>
+          <button type="button" ng-click="book_modify(book['book_id'])">修改</button>
+          <button type="button" ng-click="book_delete(book['book_id'])">删除</button>
+        </td>
       </tr>
     </table>
   </div>

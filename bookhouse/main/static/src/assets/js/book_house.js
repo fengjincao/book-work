@@ -7,8 +7,10 @@
     book_houseApp.controller('book_houseCtrl', ['$scope','$window','$http','ipCookie', function($scope,$window,$http,ipCookie) {
         $scope.user_name = "";
         $scope.books = [];
+        $scope.token = {};
         $scope.init_page = function(){
             $scope.user_name = ipCookie('name');
+            $scope.token = {'token': ipCookie('token')};
             $scope.getMyBooks();
         };
         $scope.sign_out = function(){
@@ -19,7 +21,7 @@
         };
         $scope.getMyBooks = function(){
             $http({
-                headers: {'token': ipCookie('token')},
+                headers: $scope.token,
                 method:'GET',
                 url:'/api/books/'
             }).success(function(data, status, headers, config){
@@ -32,6 +34,25 @@
             }).error(function(data, status, headers, config){
 
             });
+        };
+        $scope.book_modify = function(book_id){
+            $http({
+                headers: $scope.token,
+                method: 'PUT',
+                url: '/api/books/'+ book_id.toString() +'/',
+                data:{
+
+                }
+            });
+        };
+        $scope.book_delete = function(book_id){
+             $http({
+                headers: $scope.token,
+                method: 'DELETE',
+                url: '/api/books/'+ book_id.toString() +'/',
+            }).success(function(data, status, headers, config) {
+                 $scope.getMyBooks();
+             });
         };
     }]);
 
