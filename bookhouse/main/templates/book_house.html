@@ -10,19 +10,14 @@
       <tr>
         <td>图书id</td>
         <td>书名</td>
-        <td>价格</td>
-        <td>简介</td>
-        <td>拥有者</td>
         <td>操作</td>
       </tr>
       <tr ng-repeat="book in books">
         <td ng-bind="book['book_id']"></td>
         <td ng-bind="book['book_name']"></td>
-        <td ng-bind="book['book_price']"></td>
-        <td ng-bind="book['book_intro']"></td>
-        <td ng-bind="book['book_owner']"></td>
         <td>
-          <button type="button" ng-click="book_modify(book['book_id'])">修改</button>
+          <button type="button" ng-click="detailDialog(book['book_id'])">详情</button>
+          <button type="button" ng-click="modifyDialog(book['book_id'])">修改</button>
           <button type="button" ng-click="book_delete(book['book_id'])">删除</button>
         </td>
       </tr>
@@ -30,7 +25,67 @@
   </div>
   <div>
       <button type="button" ng-click="">新增书目</button>
-
+  </div>
+  <div class="detail_dialog">
+    <div>
+      <label>书id</label>
+      <p ng-bind="showDetail['book_id']" ></p>
+    </div>
+    <div>
+      <label>书名</label>
+      <p ng-bind="showDetail['book_name']" ></p>
+    </div>
+    <div>
+      <label>单价</label>
+      <p ng-bind="showDetail['book_price']" ></p>
+    </div>
+    <div>
+      <label>书籍简介</label>
+      <p ng-bind="showDetail['book_intro']" ></p>
+    </div>
+    <div>
+      <label>书籍主人</label>
+      <p  ng-bind="showDetail['book_owner']" ></p>
+    </div>
+    <div>
+      <button  type="button" ng-click="">返回</button>
+    </div>
+  </div>
+  <div class="add_dialog">
+    <div>
+      <label>书名</label>
+      <input type="text" ng-model="addDetail['book_name']" />
+    </div>
+    <div>
+      <label>单价</label>
+      <input type="text" ng-model="addDetail['book_price']" />
+    </div>
+    <div>
+      <label>书籍简介</label>
+      <input type="text" ng-model="addDetail['book_intro']" />
+    </div>
+    <div>
+      <button  type="button" ng-click="book_add()" >提交新增</button>
+      <button  type="button" ng-click="">取消</button>
+    </div>
+  </div>
+  <div class="modify_dialog">
+    <div>
+      <label>书名</label>
+      <input type="text" ng-model="modifyDetail['book_name']" />
+    </div>
+    <div>
+      <label>单价</label>
+      <input type="text" ng-model="modifyDetail['book_price']" />
+    </div>
+    <div>
+      <label>书籍简介</label>
+      <input type="text" ng-model="modifyDetail['book_intro']" />
+    </div>
+    <div>
+      <button  type="button" ng-click="book_modify()" >提交修改</button>
+      <button  type="button" ng-click="">取消</button>
+    </div>
   </div>
 </div>
 {% endblock %}

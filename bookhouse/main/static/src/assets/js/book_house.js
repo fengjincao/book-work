@@ -8,6 +8,24 @@
         $scope.user_name = "";
         $scope.books = [];
         $scope.token = {};
+        $scope.showDetail = {
+            'book_id':'',
+            'book_name':'',
+            'book_price':'',
+            'book_intro':'',
+            'owner_name':''
+        };
+        $scope.addDetail= {
+            'book_name':'',
+            'book_price':'',
+            'book_intro':''
+        };
+        $scope.modifyDetail= {
+            'book_id':'',
+            'book_name':'',
+            'book_price':'',
+            'book_intro':''
+        };
         $scope.init_page = function(){
             $scope.user_name = ipCookie('name');
             $scope.token = {'token': ipCookie('token')};
@@ -35,16 +53,34 @@
 
             });
         };
-        $scope.book_modify = function(book_id){
+        $scope.detailDialog = function(book_id){
             $http({
                 headers: $scope.token,
-                method: 'PUT',
+                method: 'GET',
                 url: '/api/books/'+ book_id.toString() +'/',
-                data:{
-
-                }
+            }).success(function(data){
+                $scope.showDetail= data['book'];
             });
         };
+        $scope.modifyDialog = function(book_id){
+            $http({
+                headers: $scope.token,
+                method: 'GET',
+                url: '/api/books/'+ book_id.toString() +'/',
+            }).success(function(data){
+                $scope.modifyDetail= data['book'];
+            });
+        };
+        $scope.book_modify = function(){
+            $http({
+                headers: $scope.token,
+                method: 'POST',
+                url: '/api/books/' + $scope.modifyDetail['book_id'].toString() + '/',
+                data: $scope.modifyDetail
+            }).success(function(){
+                $scope.getMyBooks();
+            });
+        }
         $scope.book_delete = function(book_id){
              $http({
                 headers: $scope.token,
@@ -53,6 +89,17 @@
             }).success(function(data, status, headers, config) {
                  $scope.getMyBooks();
              });
+        };
+        $scope.book_add = function(){
+            $http({
+                headers: $scope.token,
+                method: 'PUT',
+                url: '/api/books/',
+                data: $scope.addDetail
+
+            }).success(function(){
+                $scope.getMyBooks();
+            });
         };
     }]);
 
