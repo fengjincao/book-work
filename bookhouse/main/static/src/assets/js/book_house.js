@@ -10,9 +10,9 @@
         $scope.show_detail=false;
         $scope.show_modify=false;
         $scope.show_add=false;
+        $scope.next_disable = false;
         $scope.books = [];
         $scope.token = {};
-        $scope.grand_id = 0;
         $scope.before_id = 0;
         $scope.showDetail = {
             'book_id':'',
@@ -42,14 +42,7 @@
             ipCookie.remove('name',{path:'/'});
             $window.location.href="/";
         };
-        $scope.prev_page = function(){
-            $scope.before_id = $scope.grand_id;
-            $scope.getMyBooks();
-        };
         $scope.next_page = function(){
-            if($scope.before_id!=0) {
-                $scope.grand_id = $scope.before_id;
-            }
             $scope.before_id = $scope.books[$scope.books.length - 1].book_id;
             $scope.getMyBooks();
 
@@ -62,13 +55,12 @@
                 params: {'before_id': $scope.before_id},
             }).success(function(data, status, headers, config){
                 var content = data['data'];
-                if(content['books'].length>0) {
-                    if (data['status'] === 'success') {
-                        $scope.books = content['books'];
-                    }
-                    else if (data['status'] === 'fail') {
-                        alert("error occur");
-                    }
+                if (data['status'] === 'success') {
+                    $scope.books = $scope.books.concat(content['books']);
+                    $scope.next_disable = content['next_disable'];
+                }
+                else if (data['status'] === 'fail') {
+                    alert("error occur");
                 }
             }).error(function(data, status, headers, config){
 

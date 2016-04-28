@@ -26,8 +26,7 @@
         </td>
       </tr>
     </table>
-    <button type="button" ng-click="prev_page()">上一页</button>
-    <button type="button" ng-click="next_page()">下一页</button>
+    <button type="button" ng-click="next_page()" ng-disabled="next_disable">加载更多...</button>
   </div>
 
   <div name="detail_dialog" class="custom_dialog  " ng-show="show_detail" ng-cloak>

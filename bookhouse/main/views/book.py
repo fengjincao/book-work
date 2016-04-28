@@ -18,6 +18,7 @@ def books_page():
 @app.route('/api/books/', methods=['GET', 'POST'])
 @auth_required
 def books_api():
+    limit_number =2
     if request.method == 'GET':
         request_data = request.args
         if request_data is None:
@@ -25,13 +26,13 @@ def books_api():
         before_id = int(request_data['before_id'])
         user = g.user
         if before_id == 0:
-            items = Book.query.filter(db.text('user_id = :uid')).params(uid=user.id).order_by(Book.id.desc()).limit(2)
+            items = Book.query.filter(db.text('user_id = :uid')).params(uid=user.id).order_by(Book.id.desc()).limit(limit_number)
         elif before_id > 0:
             items = Book.query.filter(db.text(
                                   'user_id = :uid and id < :before_id'
                                     )).params(
                                         uid=user.id, before_id=before_id
-                                        ).order_by(Book.id.desc()).limit(2)
+                                        ).order_by(Book.id.desc()).limit(limit_number)
         resp_data = {
                         'status': 'success',
                         'data': {
@@ -44,6 +45,8 @@ def books_api():
                                 } for item in items]
                         }
                     }
+        if len(resp_data['data']['books']) < limit_number:
+            resp_data['data']['next_disable'] = True
         return jsonify(**resp_data)
     elif request.method == 'POST':
         request_data = request.json
