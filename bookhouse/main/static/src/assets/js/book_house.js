@@ -6,8 +6,14 @@
     var book_houseApp = angular.module('book_house', ['ipCookie']);
     book_houseApp.controller('book_houseCtrl', ['$scope','$window','$http','ipCookie', function($scope,$window,$http,ipCookie) {
         $scope.user_name = "";
+        $scope.limitnumber= 2;
+        $scope.show_detail=false;
+        $scope.show_modify=false;
+        $scope.show_add=false;
         $scope.books = [];
         $scope.token = {};
+        $scope.grand_id = 0;
+        $scope.before_id = 0;
         $scope.showDetail = {
             'book_id':'',
             'book_name':'',
@@ -32,22 +38,37 @@
             $scope.getMyBooks();
         };
         $scope.sign_out = function(){
-            ipCookie.remove('token');
-            ipCookie.remove('name');
-            ipCookie.remove('gender');
+            ipCookie.remove('token',{path:'/'});
+            ipCookie.remove('name',{path:'/'});
             $window.location.href="/";
+        };
+        $scope.prev_page = function(){
+            $scope.before_id = $scope.grand_id;
+            $scope.getMyBooks();
+        };
+        $scope.next_page = function(){
+            if($scope.before_id!=0) {
+                $scope.grand_id = $scope.before_id;
+            }
+            $scope.before_id = $scope.books[$scope.books.length - 1].book_id;
+            $scope.getMyBooks();
+
         };
         $scope.getMyBooks = function(){
             $http({
                 headers: $scope.token,
                 method:'GET',
-                url:'/api/books/'
+                url:'/api/books/',
+                params: {'before_id': $scope.before_id},
             }).success(function(data, status, headers, config){
                 var content = data['data'];
-                if(data['status']==='success')
-                    $scope.books = content['books'];
-                else if(data['status']==='fail'){
-                    alert("error occur");
+                if(content['books'].length>0) {
+                    if (data['status'] === 'success') {
+                        $scope.books = content['books'];
+                    }
+                    else if (data['status'] === 'fail') {
+                        alert("error occur");
+                    }
                 }
             }).error(function(data, status, headers, config){
 
@@ -60,6 +81,7 @@
                 url: '/api/books/'+ book_id.toString() +'/',
             }).success(function(data){
                 $scope.showDetail= data['book'];
+                $scope.show_detail = true;
             });
         };
         $scope.modifyDialog = function(book_id){
@@ -69,16 +91,18 @@
                 url: '/api/books/'+ book_id.toString() +'/',
             }).success(function(data){
                 $scope.modifyDetail= data['book'];
+                $scope.show_modify= true;
             });
         };
         $scope.book_modify = function(){
             $http({
                 headers: $scope.token,
-                method: 'POST',
+                method: 'PUT',
                 url: '/api/books/' + $scope.modifyDetail['book_id'].toString() + '/',
                 data: $scope.modifyDetail
             }).success(function(){
                 $scope.getMyBooks();
+                $scope.show_modify= false;
             });
         }
         $scope.book_delete = function(book_id){
@@ -93,12 +117,13 @@
         $scope.book_add = function(){
             $http({
                 headers: $scope.token,
-                method: 'PUT',
+                method: 'POST',
                 url: '/api/books/',
                 data: $scope.addDetail
 
             }).success(function(){
                 $scope.getMyBooks();
+                $scope.show_add= false;
             });
         };
     }]);

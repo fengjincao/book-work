@@ -6,6 +6,7 @@ from bookhouse.core import app, db
 from bookhouse.main.misc.auth import auth_required
 from bookhouse.models.book import Book
 from bookhouse.models.user import User
+from bookhouse.main.misc.errors import ViewProcessJump
 
 
 @app.route('/index/', methods=['GET'])
@@ -14,12 +15,23 @@ def books_page():
     return render_template('book_house.html')
 
 
-@app.route('/api/books/', methods=['GET', 'PUT'])
+@app.route('/api/books/', methods=['GET', 'POST'])
 @auth_required
 def books_api():
     if request.method == 'GET':
+        request_data = request.args
+        if request_data is None:
+            raise ViewProcessJump(code='ILLEGAL_GET_REQUEST')
+        before_id = int(request_data['before_id'])
         user = g.user
-        items = Book.query.filter(db.text('user_id = :uid')).params(uid=user.id).all()
+        if before_id == 0:
+            items = Book.query.filter(db.text('user_id = :uid')).params(uid=user.id).order_by(Book.id.desc()).limit(2)
+        elif before_id > 0:
+            items = Book.query.filter(db.text(
+                                  'user_id = :uid and id < :before_id'
+                                    )).params(
+                                        uid=user.id, before_id=before_id
+                                        ).order_by(Book.id.desc()).limit(2)
         resp_data = {
                         'status': 'success',
                         'data': {
@@ -33,7 +45,7 @@ def books_api():
                         }
                     }
         return jsonify(**resp_data)
-    elif request.method == 'PUT':
+    elif request.method == 'POST':
         request_data = request.json
         validator = Validator({
             'book_name': {
@@ -69,7 +81,7 @@ def books_api():
         return jsonify(**{})
 
 
-@app.route('/api/books/<int:book_id>/', methods=['GET', 'POST', 'DELETE'])
+@app.route('/api/books/<int:book_id>/', methods=['GET', 'PUT', 'DELETE'])
 @auth_required
 def book_api(book_id):
     book = Book.query.get(book_id)
@@ -87,7 +99,7 @@ def book_api(book_id):
             }
         }
         return jsonify(**resp_data)
-    elif request.method == 'POST':
+    elif request.method == 'PUT':
         request_data = request.json
         book.name = request_data['book_name']
         book.intro = request_data['book_intro']

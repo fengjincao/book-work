@@ -1,0 +1,8 @@
+.custom_dialog{
+    position: fixed;
+    left:1px;
+    top:10px;
+    width: 600px;
+    height:600px;
+    background: white;
+}

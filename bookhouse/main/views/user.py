@@ -36,6 +36,7 @@ def sign_up_api():
                 'name': {
                     'required': True,
                     'type': 'string',
+                    'minlength': 2,
                     'maxlength': 16,
                 },
                 'password': {

@@ -14,7 +14,7 @@
         ];
         $scope.name = "";
           $scope.password = "";
-          $scope.gender = "1";
+          $scope.gender = null;
           $scope.signup_submit=function(){
             $http({
                     method: 'POST',

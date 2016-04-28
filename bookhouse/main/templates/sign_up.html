@@ -11,7 +11,7 @@
   </div>
   <div>
     <label>性别：</label>
-    <span ng-repeat="option in GENDER_OPTIONS" ng-cloak><input name="gender" type="radio" ng-value="option['magic']" ng-model="gender" /><span  ng-bind="option['name']"></span></span>
+    <span ng-repeat="option in GENDER_OPTIONS" ng-cloak><input name="gender" type="radio" ng-value="option['magic']" ng-model="$parent.gender" /><span  ng-bind="option['name']"></span></span>
   </div>
 
 
